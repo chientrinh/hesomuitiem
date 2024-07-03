@@ -68,7 +68,8 @@ const ti_le = {
 
 const TI_LE_MUI_TIEM_NGUOI_THAN = 1.15;
 
-const scrollTarget = ref<HTMLElement | null>(null);
+const scrollToTop = ref<HTMLElement | null>(null);
+const scrollToBody = ref<HTMLElement | null>(null);
 
 const active_date = ref<Date>(new Date());
 
@@ -89,6 +90,12 @@ const form = ref<Form>({
     ntsl: 0,
     created_at: active_date.value,
   },
+});
+
+const popup = ref({
+  success: false,
+  error: false,
+  message: '',
 });
 
 const firestore = inject<Firestore>('firestore');
@@ -115,9 +122,10 @@ const tongMuiTiemNguoiThan = computed(() => {
   );
 });
 
-const scrollToForm = () => {
-  if (scrollTarget.value) {
-    scrollTarget.value.scrollIntoView({
+const scrollTo = (element: string) => {
+  const scrollTo = element == 'top' ? scrollToTop.value : scrollToBody.value;
+  if (scrollTo) {
+    scrollTo.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
@@ -238,20 +246,10 @@ const fetchHeSoData = async (
 };
 
 const changActiveDate = (day_selected: Date) => {
-  const now = new Date();
-  if (
-    day_selected.getDate() == now.getDate() &&
-    day_selected.getMonth() == now.getMonth()
-  ) {
-    form.value.data.created_at = now;
-  } else {
-    day_selected.setHours(23, now.getDate(), now.getHours(), now.getMinutes());
-    form.value.data.created_at = day_selected;
-  }
-
   active_date.value = day_selected;
-
+  clearForm()
   fetchHeSoNgay(day_selected);
+  scrollTo('body');
 };
 
 const fetchHeSoNgay = async (day = new Date()) => {
@@ -261,7 +259,6 @@ const fetchHeSoNgay = async (day = new Date()) => {
     startDate.setHours(0, 0, 0, 0);
     endDate.setHours(23, 59, 59, 59);
     heSoNgay.value = await fetchHeSoData(startDate, endDate);
-
   }
 };
 
@@ -284,6 +281,11 @@ const fetchHeSoThang = async () => {
 
 const sumHeSoThang = computed(() => {
   let sumHeSo = sumHeSos(heSoThang.value);
+  return convertHeSo(sumHeSo);
+});
+
+const sumHeSoNgay = computed(() => {
+  let sumHeSo = sumHeSos(heSoNgay.value);
   return convertHeSo(sumHeSo);
 });
 
@@ -354,9 +356,13 @@ const addHeSo = async () => {
     if (tongMuiTiemKhachThuong.value == 0) {
       form.value.data.ksl = 0;
     }
-
-    await addDoc(collection(firestore, 'hesos'), form.value.data);
-
+    try {
+      await addDoc(collection(firestore, 'hesos'), form.value.data);
+      showpopup('success', 'Thêm khách hàng thành công!');
+    } catch (error) {
+      showpopup('error', 'Lỗi thêm khách hàng!');
+      console.log(error);
+    }
     fetchHeSos();
     clearForm();
   }
@@ -377,9 +383,13 @@ const updateHeSo = async () => {
     if (tongMuiTiemKhachThuong.value == 0) {
       form.value.data.ksl = 0;
     }
-
-    await updateDoc(doc(firestore, 'hesos', form.value.id), form.value.data);
-
+    try {
+      await updateDoc(doc(firestore, 'hesos', form.value.id), form.value.data);
+      showpopup('success', 'Cập nhật thành công!');
+    } catch (error) {
+      showpopup('error', 'Lỗi sửa khách hàng!');
+      console.log(error);
+    }
     fetchHeSos();
     clearForm();
   }
@@ -388,7 +398,28 @@ const updateHeSo = async () => {
 const updateFormHeSo = (item: any) => {
   form.value.id = item.id;
   form.value.data = item.data;
-  scrollToForm();
+  scrollTo('top');
+};
+
+const getCreatedAt = () => {
+  const now = new Date();
+  let created_at = now;
+  if (
+    active_date.value.getDate() == now.getDate() &&
+    active_date.value.getMonth() == now.getMonth()
+  ) {
+    created_at = now;
+  } else {
+    let hours = 23;
+    let min = now.getDate();
+    let sec = now.getHours();
+    let ms = parseInt(
+      now.getMinutes().toString() + Math.floor(now.getSeconds() / 10).toString()
+    );
+    active_date.value.setHours(hours, min, sec, ms);
+    created_at = active_date.value;
+  }
+  return created_at;
 };
 
 const clearForm = () => {
@@ -406,7 +437,7 @@ const clearForm = () => {
     nt4: 0,
     nt5: 0,
     ntsl: 0,
-    created_at: active_date.value,
+    created_at: getCreatedAt(),
   };
 };
 
@@ -414,6 +445,10 @@ interface DateObject {
   yyyy: string;
   mm: string;
   dd: string;
+  hh: string;
+  ii: string;
+  ss: string;
+  SSS: string;
   [key: string]: string;
 }
 
@@ -422,21 +457,93 @@ const formatDate = (date = new Date(), format = 'yyyy/mm/dd') => {
     yyyy: date.getFullYear().toString(),
     mm: String(date.getMonth() + 1).padStart(2, '0'),
     dd: String(date.getDate()).padStart(2, '0'),
+    hh: String(date.getHours()).padStart(2, '0'),
+    ii: String(date.getMinutes()).padStart(2, '0'),
+    ss: String(date.getSeconds()).padStart(2, '0'),
+    SSS: String(date.getMilliseconds()).padStart(3, '0'),
   };
 
   return format.replace(
-    /\b(?:yyyy|mm|dd)\b/gi,
+    /\b(?:yyyy|mm|dd|hh|ii|ss|SSS)\b/gi,
     (matched) => mapObj[matched as keyof DateObject]
   );
+};
+
+const showpopup = (type = 'success', message = '') => {
+  if (type == 'success') popup.value.success = true;
+  else popup.value.error = true;
+  popup.value.message = message;
+
+  setTimeout(() => {
+    popup.value = {
+      error: false,
+      success: false,
+      message: '',
+    };
+  }, 5000);
 };
 
 onMounted(fetchHeSos);
 </script>
 
 <template>
-  <div ref="scrollTarget">
-    <HeSoHeader :sumHeSoThang="sumHeSoThang" />
+  <div ref="scrollToTop">
+    <div class="absolute top-1 right-6 z-10">
+      <div
+        v-if="popup.success"
+        class="flex w-full max-w-sm ml-3 overflow-hidden bg-white rounded-lg shadow-md"
+      >
+        <div class="flex items-center justify-center w-12 bg-green-500">
+          <svg
+            class="w-6 h-6 text-white fill-current"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 3.33331C10.8 3.33331 3.33337 10.8 3.33337 20C3.33337 29.2 10.8 36.6666 20 36.6666C29.2 36.6666 36.6667 29.2 36.6667 20C36.6667 10.8 29.2 3.33331 20 3.33331ZM16.6667 28.3333L8.33337 20L10.6834 17.65L16.6667 23.6166L29.3167 10.9666L31.6667 13.3333L16.6667 28.3333Z"
+            />
+          </svg>
+        </div>
+
+        <div class="px-4 py-2 -mx-3">
+          <div class="mx-3">
+            <span class="font-semibold text-green-500">Success</span>
+            <p class="text-sm text-gray-600">{{ popup.message }}</p>
+          </div>
+        </div>
+      </div>
+      <div
+        v-if="popup.error"
+        class="flex w-full max-w-sm ml-3 overflow-hidden bg-white rounded-lg shadow-md"
+      >
+        <div class="flex items-center justify-center w-12 bg-red-500">
+          <svg
+            class="w-6 h-6 text-white fill-current"
+            viewBox="0 0 40 40"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 3.36667C10.8167 3.36667 3.3667 10.8167 3.3667 20C3.3667 29.1833 10.8167 36.6333 20 36.6333C29.1834 36.6333 36.6334 29.1833 36.6334 20C36.6334 10.8167 29.1834 3.36667 20 3.36667ZM19.1334 33.3333V22.9H13.3334L21.6667 6.66667V17.1H27.25L19.1334 33.3333Z"
+            />
+          </svg>
+        </div>
+
+        <div class="px-4 py-2 -mx-3">
+          <div class="mx-3">
+            <span class="font-semibold text-red-500">Error</span>
+            <p class="text-sm text-gray-600">{{ popup.message }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <HeSoHeader
+      :sumHeSoThang="sumHeSoThang"
+      :sumHeSoNgay="sumHeSoNgay"
+      :active_date="active_date"
+      :formatDate="formatDate"
+    />
     <HeSoForm :form="form" @submitForm="submitForm" @clearForm="clearForm" />
+    <div ref="scrollToBody" class="relative -top-44"></div>
     <HeSoBody
       :convertHeSoNgay="convertHeSoNgay"
       :dateRange="dateRange"
@@ -444,6 +551,7 @@ onMounted(fetchHeSos);
       :changActiveDate="changActiveDate"
       :fetchHeSos="fetchHeSos"
       @updateFormHeSo="updateFormHeSo"
+      :showpopup="showpopup"
     />
   </div>
 </template>

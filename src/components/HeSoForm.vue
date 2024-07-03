@@ -1,8 +1,30 @@
 <template>
-  <div class="mt-8">
-    <h4 class="text-gray-600">Forms</h4>
+  <div class="mt-4 bg-white p-5">
+    <p class="mb-2">
+      <span
+        class="inline-flex px-2 font-semibold leading-5 text-fuchsia-800 bg-fuchsia-100 rounded-full"
+        >Hệ số kiểu 1</span
+      >: <strong class="text-red-400">(</strong
+      ><strong class="text-green-400">(</strong>Mũi tiêm Khách + Mũi tiêm Người
+      thân<strong class="text-green-400">)</strong>* Tỉ lệ +
+      <i><strong>Số lượng Người thân</strong></i>
+      * 1.15<strong class="text-red-400">)</strong> / Tổng số khách
+    </p>
+    <p>
+      <span
+        class="inline-flex px-2 font-semibold leading-5 text-sky-800 bg-sky-100 rounded-full"
+        >Hệ số kiểu 2</span
+      >: <strong class="text-red-400">(</strong
+      ><strong class="text-green-400">(</strong>Mũi tiêm Khách + Mũi tiêm Người
+      thân<strong class="text-green-400">)</strong> * Tỉ lệ +
+      <i><strong>Mũi tiêm Người thân</strong></i>
+      * 1.15<strong class="text-red-400">)</strong> / Tổng số khách
+    </p>
+  </div>
 
-    <div class="mt-4">
+  <div class="mt-1">
+    <h4 class="text-gray-600">Forms</h4>
+    <div class="mt-1">
       <div class="p-6 bg-white rounded-md shadow-md">
         <form @submit.prevent="submitForm">
           <div class="grid grid-cols-3 gap-6 mt-4">
@@ -262,7 +284,7 @@
 import { ref, defineProps, defineEmits } from 'vue';
 
 const { form } = defineProps(['form']);
-const emit = defineEmits();
+const emit = defineEmits(['submitForm', 'clearForm']);
 
 const submitForm = () => {
   emit('submitForm');
@@ -271,4 +293,6 @@ const submitForm = () => {
 const clearForm = () => {
   emit('clearForm');
 };
+
+
 </script>

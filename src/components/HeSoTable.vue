@@ -8,88 +8,98 @@
           <thead>
             <tr>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
                 STT
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
                 Nhóm
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
-                Nhóm 1
+                N1
                 <span
                   class="inline-flex px-2 font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full"
                   >(2.0)</span
                 >
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
-                Nhóm 2
+                N2
                 <span
                   class="inline-flex px-2 font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full"
                   >(1.5)</span
                 >
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
-                Nhóm 3
+                N3
                 <span
                   class="inline-flex px-2 font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full"
                   >(1.2)</span
                 >
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
-                Nhóm 4
+                N4
                 <span
                   class="inline-flex px-2 font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full"
                   >(1)</span
                 >
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
-                Nhóm 5
+                N5
                 <span
                   class="inline-flex px-2 font-semibold leading-5 text-blue-800 bg-blue-100 rounded-full"
                   >(0.8)</span
                 >
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
                 Số khách
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
                 Hệ số kiểu 1
               </th>
               <th
-                class="px-6 py-3 font-medium leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                class="px-1 py-2 font-medium text-sm leading-4 tracking-wider text-center text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
               >
                 Hệ số kiểu 2
               </th>
-              <th class="px-6 py-3 border-b border-gray-200 bg-gray-50" />
+              <th class="px-1 py-2 border-b border-gray-200 bg-gray-50" />
             </tr>
           </thead>
 
           <tbody class="bg-white">
             <tr v-for="(item, index) in items" :key="index">
               <td
-                class="px-6 py-4 border-b border-gray-200 whitespace-nowrap text-center"
+                class="px-1 py-2 border-b border-gray-200 whitespace-nowrap text-center"
               >
-                {{ items.length - index }}
+                <strong>{{ items.length - index }}</strong>
+                <p class="text-sm">
+                  <i>
+                    {{
+                      formatDate(
+                        item?.data?.created_at?.toDate(),
+                        'hh:ii:ss'
+                      ) || '-'
+                    }}</i
+                  >
+                </p>
               </td>
 
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2 border-b-2">
                   <span
                     class="inline-flex px-2 font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
@@ -104,7 +114,7 @@
                 </div>
               </td>
 
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2 border-b-2">
                   <span
                     :class="item?.data?.k1 ? 'text-green-800 bg-green-100' : ''"
@@ -123,7 +133,7 @@
                 </div>
               </td>
 
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2 border-b-2">
                   <span
                     :class="item?.data?.k2 ? 'text-green-800 bg-green-100' : ''"
@@ -142,7 +152,7 @@
                 </div>
               </td>
 
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2 border-b-2">
                   <span
                     :class="item?.data?.k3 ? 'text-green-800 bg-green-100' : ''"
@@ -161,7 +171,7 @@
                 </div>
               </td>
 
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2 border-b-2">
                   <span
                     :class="item?.data?.k4 ? 'text-green-800 bg-green-100' : ''"
@@ -180,7 +190,7 @@
                 </div>
               </td>
 
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2 border-b-2">
                   <span
                     :class="item?.data?.k5 ? 'text-green-800 bg-green-100' : ''"
@@ -199,7 +209,7 @@
                 </div>
               </td>
 
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2 border-b-2">
                   <span
                     :class="
@@ -219,15 +229,15 @@
                   >
                 </div>
               </td>
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2">
                   <span
-                    class="inline-flex px-2 text-lg font-semibold leading-5 text-fuchsia-800 bg-fuchsia-100 rounded-full"
+                    class="inline-flex px-2 text-base font-semibold leading-5 text-fuchsia-800 bg-fuchsia-100 rounded-full"
                     >{{ item?.data?.hs1?.toFixed(3) || '-' }}</span
                   >
                 </div>
               </td>
-              <td class="px-6 py-4 border-b border-gray-200 whitespace-nowrap">
+              <td class="px-1 py-2 border-b border-gray-200 whitespace-nowrap">
                 <div class="text-sm text-center leading-5 py-2">
                   <span
                     class="inline-flex px-2 text-lg font-semibold leading-5 text-sky-800 bg-sky-100 rounded-full"
@@ -237,7 +247,7 @@
               </td>
 
               <td
-                class="px-6 py-4 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap"
+                class="px-1 py-2 text-sm font-medium text-sm leading-5 text-center border-b border-gray-200 whitespace-nowrap"
               >
                 <a
                   @click="updateFormHeSo(item)"
@@ -263,7 +273,12 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, inject } from 'vue';
 import { deleteDoc, doc, Firestore } from 'firebase/firestore';
-const { items, fetchHeSos } = defineProps(['items', 'fetchHeSos']);
+const { items, fetchHeSos, showpopup } = defineProps([
+  'items',
+  'fetchHeSos',
+  'showpopup',
+  'formatDate',
+]);
 const firestore = inject<Firestore>('firestore');
 
 const emit = defineEmits();
@@ -274,8 +289,14 @@ const updateFormHeSo = (item: any) => {
 
 const deleteHeSo = async (heSoId: any) => {
   if (firestore) {
-    await deleteDoc(doc(firestore, 'hesos', heSoId));
-    fetchHeSos();
+    try {
+      await deleteDoc(doc(firestore, 'hesos', heSoId));
+      fetchHeSos();
+      showpopup('success', 'Xóa thành công!');
+    } catch (error) {
+      showpopup('error', 'Lỗi xóa khách hàng!');
+      console.log(error);
+    }
   }
 };
 </script>

@@ -1,26 +1,4 @@
 <template>
-  <div class="mt-8 bg-white p-5">
-    <p class="mb-2">
-      <span
-        class="inline-flex px-2 font-semibold leading-5 text-fuchsia-800 bg-fuchsia-100 rounded-full"
-        >Hệ số kiểu 1</span
-      >: <strong class="text-red-400">(</strong
-      ><strong class="text-green-400">(</strong>Mũi tiêm Khách + Mũi tiêm Người
-      thân<strong class="text-green-400">)</strong>* Tỉ lệ +
-      <i><strong>Số lượng Người thân</strong></i>
-      * 1.15<strong class="text-red-400">)</strong> / Tổng số khách
-    </p>
-    <p>
-      <span
-        class="inline-flex px-2 font-semibold leading-5 text-sky-800 bg-sky-100 rounded-full"
-        >Hệ số kiểu 2</span
-      >: <strong class="text-red-400">(</strong
-      ><strong class="text-green-400">(</strong>Mũi tiêm Khách + Mũi tiêm Người
-      thân<strong class="text-green-400">)</strong> * Tỉ lệ +
-      <i><strong>Mũi tiêm Người thân</strong></i>
-      * 1.15<strong class="text-red-400">)</strong> / Tổng số khách
-    </p>
-  </div>
   <div class="flex mt-8 gap-2">
     <div class="w-2/12">
       <div
@@ -34,16 +12,36 @@
           <h4 class="text-2xl mb-5 text-center font-semibold text-gray-700">
             {{ formatDate(dateRange[key]?.date, 'dd/mm/yyyy') }}
           </h4>
+          <div class="flex justify-between text-center">
+            <div>
+              <p>Số khách</p>
+              <p>
+                <span
+                  class="inline-flex px-2 font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
+                  >{{ dateRange[key]?.data?.ksl || 0 }}</span
+                >
+              </p>
+            </div>
+            <div>
+              <p>Số NT</p>
+              <p>
+                <span
+                  class="inline-flex px-2 font-semibold leading-5 text-orange-800 bg-orange-100 rounded-full"
+                  >{{ dateRange[key]?.data?.ntsl || 0 }}</span
+                >
+              </p>
+            </div>
+          </div>
           <div class="flex gap-2 content-between justify-between">
             <div class="text-center">
-              <div>HS Kiểu 1</div>
+              <div>HS 1</div>
               <span
                 class="inline-flex px-2 font-semibold leading-5 text-fuchsia-800 bg-fuchsia-100 rounded-full"
                 >{{ dateRange[key]?.data?.hs1?.toFixed(3) || 0 }}</span
               >
             </div>
             <div class="text-center">
-              <div>HS Kiểu 2</div>
+              <div>HS 2</div>
               <span
                 class="inline-flex px-2 font-semibold leading-5 text-sky-800 bg-sky-100 rounded-full"
                 >{{ dateRange[key]?.data?.hs2?.toFixed(3) || 0 }}</span
@@ -58,6 +56,8 @@
         :items="convertHeSoNgay"
         @updateFormHeSo="updateFormHeSo"
         :fetchHeSos="fetchHeSos"
+        :showpopup="showpopup"
+        :formatDate="formatDate"
       />
     </div>
   </div>
@@ -73,6 +73,7 @@ defineProps([
   'formatDate',
   'changActiveDate',
   'fetchHeSos',
+  'showpopup',
 ]);
 
 const emit = defineEmits(['updateFormHeSo']);

@@ -14,7 +14,7 @@
           </h4>
           <div class="flex justify-between text-center">
             <div>
-              <p>Số khách</p>
+              <p>Số khách </p>
               <p>
                 <span
                   class="inline-flex px-2 font-semibold leading-5 text-green-800 bg-green-100 rounded-full"
